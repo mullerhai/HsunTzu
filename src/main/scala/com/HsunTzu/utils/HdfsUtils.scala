@@ -16,7 +16,7 @@ object  HdfsUtils{
   val HDFSPORTDOTSUFFIX=PropertiesUtils.configFileByKeyGetValueFrom("HDFSPORTDOTSUFFIX")
 
   /**
-    * 解压缩  的输出路径  没有压缩格式后缀
+    * 解压缩  的输出路径 输入为压缩文件 ，输出为原始文件  没有压缩格式后缀
     * @param inpath
     * @param outPath
     * @return
@@ -34,7 +34,7 @@ object  HdfsUtils{
     return DeCompressFile
   }
   /**
-    * 压缩文件 转其他压缩格式 专用 输出文件为 压缩文件
+    * 压缩文件 转其他压缩格式 专用 输入文件为压缩文件 输出文件为 压缩文件
     * @param inpath
     * @param outPath
     * @param codecSecStr
@@ -57,7 +57,7 @@ object  HdfsUtils{
     return secondcompresFile
   }
   /**
-    * 根据输入路径 和输出路径 获取新的输出路径,输出文件为 原始日志文件
+    * 根据输入路径 和输出路径 获取新的输出路径,输入为原始文件 输出文件为 压缩文件
     * @param inpath
     * @param outPath
     * @param codec
