@@ -34,7 +34,64 @@
 
 # Run 
 
-## hadoop jarHsunTzuPro-beat-2.0.jar  inputPath outPath CompressType  PropertiesFilePath  inputCodec  OutputCodec 
+## hadoop jar    HsunTzuPro-beat-2.0.jar   inputPath   outPath   CompressType    PropertiesFilePath    inputCodec   OutputCodec 
 
 ## you will see the  logger info  on  console output 
+
+## something. before run.  you need to know. 
+
+## CompressType.  use. number instead of. compress method invoke 
+ 
+   ###  case "1" => exec.originFileToCompressFile
+   ###  case "2" => exec.tarFileToOriginFile
+   ###  case "3" => exec.compressFileToOriginFile
+   ###  case "4" => exec.oneCompressConvertOtherCompress
+
+
+
+## compress codec  use num instead of. codec class  ,example. use. 1 instead of snappycodec 
+  ###  case "0" => deflateCode
+  ###  case "1" => snappyCode
+  ###  case "2" => gzipCode
+  ###  case "3" => lz4Code
+  ###  case "4" => bZip2Code
+  ###  case "5" => defaultCode
+  ###  case _ =>  deflateCode
+    
+##  PropertiesFilePath
+
+###  you need create one property file , example.   /usr/local/info.properties
+###  you need  decleard  the  file prefix  in. Key.[files]. of your property file. for. select  compress or decompress or untar
+
+###  if. you want to. decleard. the. hdfs address and port and operetion user ,you need.  to fill the file. in. property file
+###  like this. intention. the key.  must. like this  [ hdfsAddr  hdfsPort FsKey. FsUserKey. hadoopUser HDFSPORTDOTSUFFIX. files] !!
+#### hdfsAddr=hdfs://192.168.255.161:9000
+#### hdfsPort=9000
+#### FsKey=fs.defaultFS
+#### FsUserKey=HADOOP_USER_NAME
+#### hadoopUser=linkedme_hadoop
+#### HDFSPORTDOTSUFFIX= :9000/
+#### files=biz,ad_status,ad_behavior
+
+### argument you need to. declard six ,maybe. the last argument is not can use. 
+## rum example. 
+###  hadoop jar   HsunTzuPro-beat-2.0.jar    /facishare-data/taru/20170820   /facishare-data/gao  1  /usr/local/info.properties 1  0
+
+### this. is just for  originFile.to  CompressFile, and. compress file use. snappyCodec. 
+
+###  hadoop jar HsunTzuPro-beat-2.0.jar /facishare-data/taruns/taruns/tarun/20170820/    /facishare-data/xin   4  /usr/local/info.properties  0  1
+
+### this is just. for  deflateCodec compress files. convert to snappyCodec Compress files.  oneCompressConvertOtherCompress
+
+
+###   hadoop jar HsunTzuPro-beat-2.0.jar /facishare-data/taruns/taruns/tarun/20170820/    /facishare-data/xin   3  /usr/local/info.properties  3  0
+
+### this is just  lz4Codec Compress files. Decompress. to. origin files
+
+
+###    hadoop jar HsunTzuPro-beat-2.0.jar /facishare-data/taruns/taruns/tarun/20170820/    /facishare-data/xin   2  /usr/local/info.properties  0  0
+
+###  this is just tarball file. to origin file 
+
+
 
