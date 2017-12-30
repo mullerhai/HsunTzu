@@ -72,8 +72,8 @@ object  HdfsUtils{
       nOutPath = outPath
     }
     val codecClass=HdfsCodec.codecStrToCodec(codec)
-    val flag =  HdfsCodec.boolCompresfileExtension(inpath,codecClass)
-    val compressFile = if(flag) nOutPath + inSubPath + codecClass.getDefaultExtension else ""
+    logger.info(s"input path ${nOutPath}  outputfile  codec ${codec}")
+    val compressFile = nOutPath + inSubPath + codecClass.getDefaultExtension
     return  compressFile
   }
 
