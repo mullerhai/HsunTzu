@@ -5,8 +5,8 @@
 
 ## Very Fast  Hdfs  Origin File  To  Compress  Decompress Untar Tarball 
 
-##  LISENCE
-##  MIT
+##  LISENCE.  MIT
+
 
 ###  工欲善其事必先利其器
 
@@ -42,11 +42,11 @@
 
 ## CompressType.  use. number instead of. compress method invoke 
  
- 
+   ###  case "1"  => exec.originFileToCompressFile
    ###  case "2" => exec.tarFileToOriginFile
    ###  case "3" => exec.compressFileToOriginFile
    ###  case "4" => exec.oneCompressConvertOtherCompress
-   ###  case "1"  => exec.originFileToCompressFile
+ 
 
 
 
