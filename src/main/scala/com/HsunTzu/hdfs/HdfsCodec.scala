@@ -1,5 +1,7 @@
 package com.HsunTzu.hdfs
 
+
+import com.HsunTzu.hdfs.HdfsCodec.{bZip2Code,lz4Code,snappyCode,gzipCode, defaultCode, deflateCode}
 import com.typesafe.scalalogging.Logger
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.io.compress._
@@ -12,6 +14,14 @@ class HdfsCodec {
 object HdfsCodec{
 
   private [this] val logger =Logger(LoggerFactory.getLogger(classOf[HdfsCodec]))
+
+  val deflateCode:String="DEFLATE"
+  val snappyCode:String="SNAPPY"
+  val gzipCode:String= "GZIP"
+  val lz4Code:String="LZO"
+  val bZip2Code:String="BZIP2"
+  val defaultCode:String="DEFAULT"
+
   /**
     * 压缩格式 数字信号 到压缩格式 的映射
     *
@@ -19,13 +29,13 @@ object HdfsCodec{
     * @return
     */
   def codecSignalToCodec(signal: String): String = signal.trim match {
-    case "0" => "DEFLATE"
-    case "1" => "SNAPPY"
-    case "2" => "GZIP"
-    case "3" => "LZO"
-    case "4" => "BZIP2"
-    case "5" => "DEFAULT"
-    case _ =>  "DEFLATE"
+    case "0" => deflateCode
+    case "1" => snappyCode
+    case "2" => gzipCode
+    case "3" => lz4Code
+    case "4" => bZip2Code
+    case "5" => defaultCode
+    case _ =>  deflateCode
   }
 
   /**
@@ -35,11 +45,11 @@ object HdfsCodec{
     */
   def codecStrToCodec(codecStr:String):CompressionCodec=codecStr.trim match {
     case "SNAPPY" => new SnappyCodec()
-    case "GZIP" => new GzipCodec()
-    case "LZO" => new Lz4Codec()
+    case "GZIP"   => new GzipCodec()
+    case "LZO"    => new Lz4Codec()
     case  "BZIP2" => new BZip2Codec()
     case "DEFLATE" => new DeflateCodec()
-    case  "DEFAULT" => new DefaultCodec()
+    case "DEFAULT" => new DefaultCodec()
     case _ =>  new DeflateCodec()
   }
 

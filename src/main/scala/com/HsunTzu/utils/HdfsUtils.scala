@@ -1,8 +1,9 @@
 package com.HsunTzu.utils
 
+import com.HsunTzu.hdfs.HdfsCodec
 import com.typesafe.scalalogging.Logger
 import org.apache.hadoop.conf.Configuration
-import org.apache.hadoop.fs.{FileSystem, Path}
+import org.apache.hadoop.fs.{FileStatus, FileSystem, Path}
 import org.apache.hadoop.mapreduce.Job
 import org.slf4j.LoggerFactory
 
@@ -12,6 +13,87 @@ class HdfsUtils {
 object  HdfsUtils{
 
   private [this] val logger =Logger(LoggerFactory.getLogger(classOf[HdfsUtils]))
+  val HDFSPORT="9000"
+  val HDFSPORTDOTSUFFIX=":"+HDFSPORT+"/"
+
+  /**
+    * 解压缩  的输出路径  没有压缩格式后缀
+    * @param inpath
+    * @param outPath
+    * @return
+    */
+  def decompressOutFilePath(inpath:String,outPath:String):String={
+    val inSubPathExtension: String =CommonUtils.getOutFileSubPath(inpath)
+    val inSubPath =inSubPathExtension.substring(0,inSubPathExtension.lastIndexOf("."))
+    var nOutPath = ""
+    if (outPath.endsWith("/")) {
+      nOutPath = outPath.substring(0, outPath.length - 1)
+    } else {
+      nOutPath = outPath
+    }
+    val DeCompressFile = nOutPath + inSubPath
+    return DeCompressFile
+  }
+  /**
+    * 压缩文件 转其他压缩格式 专用 输出文件为 压缩文件
+    * @param inpath
+    * @param outPath
+    * @param codecSecStr
+    * @return
+    */
+  def dropExtensionGetOutHdfsPathByCodec(inpath:String,outPath:String,codecSecStr:String):String={
+    val inSubPathExtension: String =CommonUtils.getOutFileSubPath(inpath)
+    val inSubPath =inSubPathExtension.substring(0,inSubPathExtension.lastIndexOf("."))
+    var nOutPath = ""
+    if (outPath.endsWith("/")) {
+      nOutPath = outPath.substring(0, outPath.length - 1)
+    } else {
+      nOutPath = outPath
+    }
+    val codecSecond=HdfsCodec.codecStrToCodec(codecSecStr)
+    val secondcompresFile=nOutPath+inSubPath+codecSecond.getDefaultExtension
+    logger.info("secondcompresFile || "+secondcompresFile + "  outpath "+nOutPath+" inSubPath  "+inSubPath+" ex "+codecSecond.getDefaultExtension)
+    return secondcompresFile
+  }
+  /**
+    * 根据输入路径 和输出路径 获取新的输出路径,输出文件为 原始日志文件
+    * @param inpath
+    * @param outPath
+    * @param codec
+    * @return
+    */
+  def getFileOutHDFSpathByCodec(inpath:String,outPath:String,codec:String):String={
+    val inSubPath: String = CommonUtils.getOutFileSubPath(inpath)
+    var nOutPath = ""
+    if (outPath.endsWith("/")) {
+      nOutPath = outPath.substring(0, outPath.length - 1)
+    } else {
+      nOutPath = outPath
+    }
+    val codecClass=HdfsCodec.codecStrToCodec(codec)
+    val compressFile = nOutPath + inSubPath + codecClass.getDefaultExtension
+    return  compressFile
+  }
+
+  /**
+    * 在目录级别操作 压缩时  根据 fileStatus 获取 新的 子文件 输入路径
+    * @param files
+    * @return
+    */
+  def getNewSubInpathByFileStatus(files:FileStatus):String={
+   val subFileName=files.getPath.getName
+   logger.info(s"path dir name   ${subFileName}")
+   logger.info(s"path parent ${files.getPath.getParent}")
+   val hdfsUriPath = files.getPath.getParent.toString
+   var newSubInpath = ""
+   if (hdfsUriPath.contains(HDFSPORTDOTSUFFIX)) {
+     val uriIndex = hdfsUriPath.indexOf(HDFSPORTDOTSUFFIX)
+     newSubInpath = hdfsUriPath.substring(uriIndex + 5) + "/" + subFileName
+   } else {
+     newSubInpath = hdfsUriPath + "/" + subFileName
+   }
+   return newSubInpath
+ }
   /**mapreduce 运行成功后 得到 成功后的输出文件
     *
     * @param conf

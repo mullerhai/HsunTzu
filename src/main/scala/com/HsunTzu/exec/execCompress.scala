@@ -10,9 +10,18 @@ import org.platanios.tensorflow.api.tf
 import org.platanios.tensorflow.jni.{Graph, Session}
 import org.slf4j.LoggerFactory
 
+/***
+  * 通过一个主类设置  选择最后要执行的方法
+  */
 object  execCompress {
 
   private [this] val logger =Logger(LoggerFactory.getLogger(classOf[execCompress]))
+
+  /**
+    * * 1.输入目录 2.输出目录 3.压缩方法类型  4.属性文件路径 5.输入压缩格式信号量 6输出压缩格式信号量
+    *
+    * @param args
+    */
   def main(args: Array[String]): Unit = {
 
     val FS = "hdfs://192.168.255.161:9000"
@@ -37,7 +46,7 @@ object  execCompress {
       case "1" => exec.originFileToCompressFile(fs, conf, inputPath, outdir, inputCodecSignal)(propertiesPath)
       case "2" => exec.tarFileToOriginFile(fs, inputPath, outdir, inputCodecSignal)(propertiesPath)
       case "3" => exec.compressFileToOriginFile(fs, conf, inputPath, outdir, inputCodecSignal)(propertiesPath)
-      case "4" => exec.oneCompressFileConvertToOtherCompressFile(fs, conf, inputPath, outdir, inputCodecSignal, outputCodecSignal)(propertiesPath)
+      case "4" => exec.oneCompressConvertOtherCompress(fs, conf, inputPath, outdir, inputCodecSignal, outputCodecSignal)(propertiesPath)
 
       case "5" => exec.originFilesToTarBall(fs, conf, inputPath, outdir, inputCodecSignal)(propertiesPath)
       case "6" => exec.compressFilesToTarball(fs, conf, inputPath, outdir, inputCodecSignal)(propertiesPath)
@@ -65,7 +74,7 @@ class execCompress {
   def originFileToCompressFile(fs: FileSystem, conf: Configuration, inpath: String, outPath: String, codeSignal: String = "0")(propertiesPath: String = "/usr/local/info.properties"): Unit = {
     val codec: String = HdfsCodec.codecSignalToCodec(codeSignal)
     //可以使用 未来需要重构
-    HdfsCompress.DirCompressBySnappyGzipLzoCodec(fs, conf, inpath, outPath, codec)(propertiesPath)
+    HdfsCompress.DirCompressByHDFSCodec(fs, conf, inpath, outPath, codec)(propertiesPath)
 
   }
 
@@ -112,7 +121,7 @@ class execCompress {
     * @param outputCodecSignal
     * @param propertiesPath
     */
-  def oneCompressFileConvertToOtherCompressFile(fs: FileSystem, conf: Configuration, inpath: String, outPath: String, inputCodecSignal: String, outputCodecSignal: String)(propertiesPath: String = "/usr/local/info.properties"): Unit = {
+  def oneCompressConvertOtherCompress(fs: FileSystem, conf: Configuration, inpath: String, outPath: String, inputCodecSignal: String, outputCodecSignal: String)(propertiesPath: String = "/usr/local/info.properties"): Unit = {
 
     val inputCodec: String = HdfsCodec.codecSignalToCodec(inputCodecSignal)
     val outputCodec: String = HdfsCodec.codecSignalToCodec(outputCodecSignal)

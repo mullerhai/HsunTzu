@@ -159,17 +159,13 @@ object JsonUtils {
       "birth" -> "2017".asJson
     )
     val sss = parser.parse(sjsctrlog)
-
-
     val ssoo = getJsonFromStr(simpleJsonString)
     val ooo = getValuesFromJson(ssoo, "habilities")
     val ssxxx = getValuesFromStr(sjsctrlog, "ad_content_list")
     val ssx: Json = sss.getOrElse(Json).asInstanceOf[Json]
     val sso = ssx.findAllByKey("imei_md5")(0)
     val sm2 = Json.fromString(sjsctrlog)
-
     val fdx = getJsonFromStrPartArray(originlog, 2)("\t")
-
     val wwt = getValuesFromJson(fdx, "deeplink")
     val fsx = originlog.split("\t")(2)
     println(fdx)

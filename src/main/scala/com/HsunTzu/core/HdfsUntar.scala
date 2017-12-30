@@ -20,6 +20,56 @@ object  HdfsUntar{
 
 
   private [this] val logger=Logger(LoggerFactory.getLogger(classOf[HdfsUntar]))
+
+
+  val  targz=".tar.gz"
+  val tarbz2 =".tar.bz2"
+  val  tgz=".tgz"
+  val  tar =".tar"
+
+  val  zip =".zip"
+  val  gz =".gz"
+  val  bz2=".bz2"
+  /**
+    * 解压 hdfs tar 文件父级文件夹
+    * @param srcDir
+    * @param outputDir
+    * @param fs
+    * @param propertiesPath
+    */
+  def  unCompressTarParentDir(srcDir: String, outputDir: String, fs: HDFSFileSystem,propertiesPath:String): Unit = {
+    if(boolTarFileSuffix(srcDir)){
+      logger.info("single tar file outputDir "+outputDir)
+      newUnCompressFile(srcDir,outputDir,fs,propertiesPath)
+    }else{
+      val hdfsTarfiles=fs.listFiles(new Path(srcDir),true)
+      while (hdfsTarfiles.hasNext){
+        val tarName=hdfsTarfiles.next().getPath.toString
+        if(boolTarFileSuffix(tarName)){
+          logger.info("parent tarname  "+tarName +" output dir "+outputDir)
+          newUnCompressFile(tarName,outputDir,fs,propertiesPath)
+        }
+      }
+    }
+  }
+
+  /**
+    * 解压 单个tar 文件
+    * @param srcDir
+    * @param outputDir
+    * @param fs
+    * @param propertiesPath
+    */
+  def newUnCompressFile(srcDir: String, outputDir: String, fs: HDFSFileSystem,propertiesPath:String): Unit = {
+    val srcTemp: String = srcDir.toLowerCase()
+    if(boolTarFileSuffix(srcTemp)){
+      tarFileUnCompress(srcDir,outputDir,fs,propertiesPath)
+    }else if(boolCompressFileSuffix(srcTemp)){
+      zipBz2gzipFileUnCompress(srcDir,outputDir,fs)
+    }
+  }
+
+
   /**
     * tar 包类型压缩文件解压
     *
@@ -31,26 +81,21 @@ object  HdfsUntar{
   def tarFileUnCompress(srcDir: String, outputDir: String, fs: HDFSFileSystem, propertiesPath: String): Unit = {
     val tarln: TarInputStream =FileUtils.tarfileStreamBySuffix(srcDir,fs)
     logger.info("tarFileUnCompress uncompressing" + fs.getUri + srcDir + "fs" + fs)
-    logger.info("begin uncompress log data tar gz")
     var entry: TarEntry = null
     while ( {
       entry = tarln.getNextEntry; entry != null
     }) {
       try {
         if (entry.isDirectory) {
-          logger.info("tar entry.getName  " + entry.getName + "   || outputDir:  " + outputDir)
           val dirPath=outputDir + "/" + entry.getName
-          logger.info("dirPath"+dirPath)
+          logger.info("tar entry.getName  " + entry.getName + "   || outputDir:  " + outputDir+"dirPath"+dirPath)
           val ps: Path = new Path(dirPath)
-          logger.info("hdfs path name ||"+ps.getName)
           val mkflag=fs.mkdirs(ps)
-          logger.info("hdfs create dir suceess"+mkflag)
+          logger.info("hdfs path name ||"+ps.getName+"hdfs create dir suceess"+mkflag)
         } else {
           logger.info("tar OutputStream entry.getName  " + entry.getName + "  || outputDir:  " + outputDir)
           val tarEntryName: String = entry.getName
           val flag: Boolean =CommonUtils.boolFilePrefixContains(tarEntryName,propertiesPath)
-
-          logger.info("flag || " + flag)
           if (flag == true) {
             val pss: Path = new Path(outputDir + "/" + entry.getName)
             val out: FSDataOutputStream = fs.create(pss)
@@ -66,29 +111,24 @@ object  HdfsUntar{
                   length != -1
                 } catch {
                   case e: IndexOutOfBoundsException => {
-                    logger.info("read length" + length)
                     false
                   }
                 }
 
               }) {
                 val ale = arrayBuffer.length
-                //println(" arrayBuffer "+ale+" length "+ length)
                 if (arrayBuffer != null && ale > 0 && length >= 0 && ale >= length) {
                   out.write(arrayBuffer, 0, length)
                 } else {
                   loop.break()
                 }
               }
-
             } catch {
               case e: Exception => e.printStackTrace()
             } finally {
               out.flush()
-              // out.finalize()
               out.close()
               IOUtils.closeStream(out)
-
             }
           }
         }
@@ -167,59 +207,47 @@ object  HdfsUntar{
       } catch {
         case e: Exception => e.printStackTrace()
       } finally {
-
         IOUtils.closeStream(out)
-
       }
     }
-
     IOUtils.closeStream(is)
     // fs.close()
   }
 
-
-  /**
-    * 解压 hdfs tar 文件父级文件夹
-    * @param srcDir
-    * @param outputDir
-    * @param fs
-    * @param propertiesPath
-    */
-  def  unCompressTarParentDir(srcDir: String, outputDir: String, fs: HDFSFileSystem,propertiesPath:String): Unit = {
+  def boolTarFileSuffix(srcDir:String):Boolean={
     if(srcDir.endsWith(".tar.gz")||srcDir.endsWith(".tar.bz2")||srcDir.endsWith(".tgz")||srcDir.endsWith(".tar")){
-      logger.info("single tar file")
-      newUnCompressFile(srcDir,outputDir,fs,propertiesPath)
+      return  true
     }else{
-      val hdfsTarfiles=fs.listFiles(new Path(srcDir),true)
-      while (hdfsTarfiles.hasNext){
-        val tarName=hdfsTarfiles.next().getPath.toString
-        logger.info("parent tarname"+tarName)
-        newUnCompressFile(tarName,outputDir,fs,propertiesPath)
-      }
+      return false
     }
   }
-  def newUnCompressFile(srcDir: String, outputDir: String, fs: HDFSFileSystem,propertiesPath:String): Unit = {
-    val srcTemp: String = srcDir.toLowerCase()
-    if (srcTemp.endsWith(".tar.gz")||srcTemp.endsWith(".tar.bz2")||srcTemp.endsWith(".tgz")||srcTemp.endsWith(".tar")) {
-      tarFileUnCompress(srcDir,outputDir,fs,propertiesPath)
-    }else if (srcTemp.endsWith(".bz2")||srcTemp.endsWith(".gz")||srcTemp.endsWith(".zip")) {
-      zipBz2gzipFileUnCompress(srcDir,outputDir,fs)
+  def  boolCompressFileSuffix(srcTemp:String):Boolean={
+    if (srcTemp.endsWith(".bz2")||srcTemp.endsWith(".gz")||srcTemp.endsWith(".zip")) {
+      return  true
+    }else{
+      return false
     }
+
   }
+
+
+
+
   def umcompresstar(srcDir: String, outputDir: String, fs: HDFSFileSystem,propertiesPath:String): Unit = {
     var tarln: TarInputStream = null
     var is: InputStream = null
     logger.info("umcompresstar method execing")
     try {
       val srcTemp: String = srcDir.toLowerCase()
-      if (srcTemp.endsWith(".tar.gz")||srcTemp.endsWith(".tar.bz2")||srcTemp.endsWith(".tgz")||srcTemp.endsWith(".tar")) {
+      if(boolTarFileSuffix(srcTemp)){
         logger.info("srctemp tar.gz uncompressing")
         tarln =FileUtils.tarfileStreamBySuffix(srcTemp,fs)
         logger.info("tarball  umcompress successfully")
-      } else if (srcTemp.endsWith(".bz2")||srcTemp.endsWith(".gz")||srcTemp.endsWith(".zip")) {
+      }else if (boolCompressFileSuffix(srcTemp)){
         is =FileUtils.zipBz2gzipFileStreamBySuffix(srcTemp,fs)
       }
-      if (srcTemp.endsWith(".tar.gz") || srcTemp.endsWith(".tar.bz2") || srcTemp.endsWith(".tgz") || srcTemp.endsWith(".tar")) {
+
+      if (boolTarFileSuffix(srcTemp)) {
         logger.info("begin uncompress log data tar gz")
         var entry: TarEntry = null
         while ( {
