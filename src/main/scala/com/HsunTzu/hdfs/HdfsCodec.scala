@@ -1,7 +1,9 @@
 package com.HsunTzu.hdfs
 
+import com.typesafe.scalalogging.Logger
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.io.compress._
+import org.slf4j.LoggerFactory
 
 class HdfsCodec {
 
@@ -9,6 +11,7 @@ class HdfsCodec {
 
 object HdfsCodec{
 
+  private [this] val logger =Logger(LoggerFactory.getLogger(classOf[HdfsCodec]))
   /**
     * 压缩格式 数字信号 到压缩格式 的映射
     *

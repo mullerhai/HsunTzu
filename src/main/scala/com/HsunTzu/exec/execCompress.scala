@@ -1,6 +1,6 @@
 package com.HsunTzu.exec
 
-import com.HsunTzu.core.{HdfsCompress, HdfsDeCompress, HdfsUntar}
+import com.HsunTzu.core.{HdfsCompress, HdfsConvertCompress, HdfsDeCompress, HdfsUntar}
 import com.HsunTzu.hdfs.HdfsCodec
 import com.typesafe.scalalogging.Logger
 import org.apache.hadoop.conf.Configuration
@@ -117,7 +117,7 @@ class execCompress {
     val inputCodec: String = HdfsCodec.codecSignalToCodec(inputCodecSignal)
     val outputCodec: String = HdfsCodec.codecSignalToCodec(outputCodecSignal)
     if (inputCodec.trim != outputCodec.trim) {
-      HdfsCompress.dirConverterOneCompressToOtherCompress(fs, conf, inpath, outPath, inputCodec, outputCodec)(propertiesPath)
+      HdfsConvertCompress.dirConverterOneCompressToOtherCompress(fs, conf, inpath, outPath, inputCodec, outputCodec)(propertiesPath)
     }
   }
 
