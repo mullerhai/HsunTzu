@@ -23,6 +23,20 @@ object HdfsCodec{
   val defaultCode:String="DEFAULT"
 
   /**
+    * 判断 压缩文件的 后缀名 与 压缩codec 是否一致
+    * @param file
+    * @param codec
+    * @return
+    */
+  def boolCompresfileExtension(file:String,codec:CompressionCodec):Boolean={
+    val extension=codec.getDefaultExtension
+    if(file.endsWith(extension)){
+      return  true
+    }else{
+      return  false
+    }
+  }
+  /**
     * 压缩格式 数字信号 到压缩格式 的映射
     *
     * @param signal

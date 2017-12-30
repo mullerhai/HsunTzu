@@ -40,7 +40,7 @@ object  HdfsUtils{
     * @param codecSecStr
     * @return
     */
-  def dropExtensionGetOutHdfsPathByCodec(inpath:String,outPath:String,codecSecStr:String):String={
+  def dropExtensionGetOutHdfsPathByCodec(inpath:String,outPath:String,codecFirStr:String,codecSecStr:String):String={
     val inSubPathExtension: String =CommonUtils.getOutFileSubPath(inpath)
     val inSubPath =inSubPathExtension.substring(0,inSubPathExtension.lastIndexOf("."))
     var nOutPath = ""
@@ -49,8 +49,10 @@ object  HdfsUtils{
     } else {
       nOutPath = outPath
     }
+    val codecFirst=HdfsCodec.codecStrToCodec(codecFirStr)
     val codecSecond=HdfsCodec.codecStrToCodec(codecSecStr)
-    val secondcompresFile=nOutPath+inSubPath+codecSecond.getDefaultExtension
+    val flag= HdfsCodec.boolCompresfileExtension(inpath,codecFirst)
+    val secondcompresFile=if(flag) nOutPath+inSubPath+codecSecond.getDefaultExtension  else ""
     logger.info("secondcompresFile || "+secondcompresFile + "  outpath "+nOutPath+" inSubPath  "+inSubPath+" ex "+codecSecond.getDefaultExtension)
     return secondcompresFile
   }
@@ -70,7 +72,8 @@ object  HdfsUtils{
       nOutPath = outPath
     }
     val codecClass=HdfsCodec.codecStrToCodec(codec)
-    val compressFile = nOutPath + inSubPath + codecClass.getDefaultExtension
+    val flag =  HdfsCodec.boolCompresfileExtension(inpath,codecClass)
+    val compressFile = if(flag) nOutPath + inSubPath + codecClass.getDefaultExtension else ""
     return  compressFile
   }
 
@@ -129,6 +132,8 @@ object  HdfsUtils{
     if (fs.exists(path)) {
       try {
         fs.delete(new Path(pathStr), true)
+      }catch {
+        case e:Exception => e.printStackTrace()
       }
 
       logger.info("delete the ouput path successfully")

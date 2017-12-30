@@ -5,6 +5,7 @@ import java.io.{BufferedInputStream, BufferedOutputStream}
 import com.HsunTzu.hdfs.HdfsCodec
 import com.HsunTzu.utils.{CommonUtils, HdfsUtils, PropertiesUtils}
 import com.typesafe.scalalogging.Logger
+import org.apache.commons.lang.StringUtils
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs._
 import org.apache.hadoop.io.IOUtils
@@ -89,6 +90,7 @@ object HdfsCompress {
     HdfsCodec.codecTosetConf(codecMethod, codec, conf)
     val buffInStream: BufferedInputStream = new BufferedInputStream(inFSData)
     val compressFile =HdfsUtils.getFileOutHDFSpathByCodec(inpath,outPath,codecMethod)
+    if(compressFile==""||compressFile==StringUtils.EMPTY) return
     val outPaths: Path = new Path(compressFile)
     val fsOStream: FSDataOutputStream = fs.create(outPaths)
     val bufStream: BufferedOutputStream = new BufferedOutputStream(fsOStream)
