@@ -13,8 +13,7 @@ class HdfsUtils {
 object  HdfsUtils{
 
   private [this] val logger =Logger(LoggerFactory.getLogger(classOf[HdfsUtils]))
-  val HDFSPORT="9000"
-  val HDFSPORTDOTSUFFIX=":"+HDFSPORT+"/"
+  val HDFSPORTDOTSUFFIX=PropertiesUtils.configFileByKeyGetValueFrom("HDFSPORTDOTSUFFIX")
 
   /**
     * 解压缩  的输出路径  没有压缩格式后缀
@@ -124,7 +123,7 @@ object  HdfsUtils{
     * @param conf
     * @param pathStr
     */
-  def checkOuputExist(conf: Configuration, pathStr: String): Unit = {
+  def checkHdfsOuputExist(conf: Configuration, pathStr: String): Unit = {
     val fs = FileSystem.get(conf)
     val path = new Path(pathStr)
     if (fs.exists(path)) {

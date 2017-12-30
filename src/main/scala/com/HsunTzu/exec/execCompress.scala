@@ -2,6 +2,7 @@ package com.HsunTzu.exec
 
 import com.HsunTzu.core.{HdfsCompress, HdfsConvertCompress, HdfsDeCompress, HdfsUntar}
 import com.HsunTzu.hdfs.HdfsCodec
+import com.HsunTzu.utils.PropertiesUtils
 import com.typesafe.scalalogging.Logger
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.FileSystem
@@ -17,6 +18,13 @@ object  execCompress {
 
   private [this] val logger =Logger(LoggerFactory.getLogger(classOf[execCompress]))
 
+  def  fillHdfsConfig():(String,String,String,String)={
+    val FS =PropertiesUtils.configFileByKeyGetValueFrom("hdfsAddr")
+    val FSKey =PropertiesUtils.configFileByKeyGetValueFrom("FsKey")
+    val FSUser = PropertiesUtils.configFileByKeyGetValueFrom("FsUserKey")
+    val hadoopUser =PropertiesUtils.configFileByKeyGetValueFrom("hadoopUser")
+    return (FSKey,FS,FSUser,hadoopUser)
+  }
   /**
     * * 1.输入目录 2.输出目录 3.压缩方法类型  4.属性文件路径 5.输入压缩格式信号量 6输出压缩格式信号量
     *
@@ -24,20 +32,16 @@ object  execCompress {
     */
   def main(args: Array[String]): Unit = {
 
-    val FS = "hdfs://192.168.255.161:9000"
-    val FSKey = "fs.defaultFS"
-    val FSUser = "HADOOP_USER_NAME"
-    val hadoopUser = "linkedme_hadoop"
-    System.setProperty(FSUser, hadoopUser)
+    val config=fillHdfsConfig()
     val conf: Configuration = new Configuration()
-    conf.set(FSKey, FS)
-    conf.set(FSUser, hadoopUser)
+    conf.set(config._1,config._2)
+    conf.set(config._3,config._4)
+    System.setProperty(config._3,config._4)
     val fs = FileSystem.get(conf)
-
     val inputPath: String = args(0)
     val outdir: String = args(1)
     val compressType: String = args(2)
-    val propertiesPath = args(3)
+    val propertiesPath:String = args(3)
     val inputCodecSignal: String = args(4)
     val outputCodecSignal: String = args(5)
     val exec = new execCompress
@@ -54,7 +58,8 @@ object  execCompress {
       case _ => exec.originFileToCompressFile(fs, conf, inputPath, outdir, inputCodecSignal)(propertiesPath)
     }
     val  programEnd =System.currentTimeMillis()
-    logger.info("Time  cause "+(programEnd-programStart))
+    val  timeCause=programEnd-programStart
+    logger.info("Time  cause "+timeCause)
   }
 
 }

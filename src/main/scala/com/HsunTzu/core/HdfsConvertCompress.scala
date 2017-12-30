@@ -3,7 +3,7 @@ package com.HsunTzu.core
 import java.io.{BufferedInputStream, BufferedOutputStream}
 
 import com.HsunTzu.hdfs.HdfsCodec
-import com.HsunTzu.utils.{CommonUtils, HdfsUtils}
+import com.HsunTzu.utils.{CommonUtils, HdfsUtils, PropertiesUtils}
 import com.typesafe.scalalogging.Logger
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs._
@@ -18,8 +18,7 @@ class HdfsConvertCompress {
 object HdfsConvertCompress{
 
   private [this] val logger=Logger(LoggerFactory.getLogger(classOf[HdfsConvertCompress]))
-  val HDFSPORT="9000"
-  val HDFSPORTDOTSUFFIX=":"+HDFSPORT+"/"
+  val HDFSPORTDOTSUFFIX=PropertiesUtils.configFileByKeyGetValueFrom("HDFSPORTDOTSUFFIX")
 
 
   /***

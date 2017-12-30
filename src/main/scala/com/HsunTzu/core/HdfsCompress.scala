@@ -3,7 +3,7 @@ package com.HsunTzu.core
 import java.io.{BufferedInputStream, BufferedOutputStream}
 
 import com.HsunTzu.hdfs.HdfsCodec
-import com.HsunTzu.utils.{CommonUtils, HdfsUtils}
+import com.HsunTzu.utils.{CommonUtils, HdfsUtils, PropertiesUtils}
 import com.typesafe.scalalogging.Logger
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs._
@@ -19,8 +19,9 @@ object HdfsCompress {
 
   private[this] val logger = Logger(LoggerFactory.getLogger(classOf[HdfsCompress]))
 
-  val HDFSPORT="9000"
-  val HDFSPORTDOTSUFFIX=":"+HDFSPORT+"/"
+
+  val HDFSPORTDOTSUFFIX=PropertiesUtils.configFileByKeyGetValueFrom("HDFSPORTDOTSUFFIX")
+
 
   /**
     * 按目录对文件  进行 snappy  gzip  lzo  压缩

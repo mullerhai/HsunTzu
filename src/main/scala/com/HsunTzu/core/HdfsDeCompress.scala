@@ -3,7 +3,7 @@ package com.HsunTzu.core
 import java.io.BufferedInputStream
 
 import com.HsunTzu.hdfs.HdfsCodec
-import com.HsunTzu.utils.{CommonUtils, HdfsUtils}
+import com.HsunTzu.utils.{CommonUtils, HdfsUtils, PropertiesUtils}
 import com.typesafe.scalalogging.Logger
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs._
@@ -20,8 +20,8 @@ object HdfsDeCompress{
 
   private[this] val logger=Logger(LoggerFactory.getLogger(classOf[HdfsDeCompress]))
 
-  val HDFSPORT="9000"
-  val HDFSPORTDOTSUFFIX=":"+HDFSPORT+"/"
+  val HDFSPORTDOTSUFFIX=PropertiesUtils.configFileByKeyGetValueFrom("HDFSPORTDOTSUFFIX")
+
   /**
     * 目录级别 解压缩文件
     * @param fs
@@ -52,7 +52,7 @@ object HdfsDeCompress{
               if (fins.isFile) {
                 flag = CommonUtils.boolFilePrefixContains(newInp, propertiesPath)
                 if (flag) {
-                  logger.info("begin decompress newInp "+newInp +"  uriPath  "+ uriPath+" codec "+codec )
+                  logger.info("begin decompress newInp "+newInp +"  outPath  "+ outPath+" codec "+codec )
                   normalDeCompressForHdfsFile(fs, conf, newInp, outPath, codec)(propertiesPath)
                 }
               } else {

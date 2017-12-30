@@ -21,6 +21,7 @@ object  HdfsUntar{
 
   private [this] val logger=Logger(LoggerFactory.getLogger(classOf[HdfsUntar]))
 
+  val HDFSPORTDOTSUFFIX=PropertiesUtils.configFileByKeyGetValueFrom("HDFSPORTDOTSUFFIX")
 
   val  targz=".tar.gz"
   val tarbz2 =".tar.bz2"

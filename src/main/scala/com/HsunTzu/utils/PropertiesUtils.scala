@@ -16,8 +16,49 @@ class PropertiesUtils {
 object PropertiesUtils{
 
 
-  private [this]val proLogger= Logger(LoggerFactory.getLogger(classOf[PropertiesUtils]))
+  private [this]val logger= Logger(LoggerFactory.getLogger(classOf[PropertiesUtils]))
 
+  val configPath="./config.properties"
+
+  /**
+    * 获取 jar 包内主要配置文件
+    * @param key
+    * @return
+    */
+  def configFileByKeyGetValueFrom(key:String):String={
+    val properties: Properties = new Properties()
+    try {
+      val pertiesPath = this.getClass.getClassLoader.getResourceAsStream(configPath)
+      properties.load(pertiesPath)
+    } catch {
+      case e: NullPointerException => throw e
+    }
+    val value=properties.getProperty(key,"null")
+    return value
+  }
+
+  /***
+    * 获取 外部配置文件
+    * @param key
+    * @return
+    */
+  def outterConfigFileByKey(outfilePath :String,key:String):String={
+    val pro: Properties = new Properties()
+    try {
+      val ins: InputStream = new FileInputStream(new File(outfilePath))
+      pro.load(ins)
+    } catch {
+      case e: Exception => throw e
+    }
+    val value:String=pro.getProperty(key,"null")
+    return value
+  }
+
+  def main(args: Array[String]): Unit = {
+    val fs =outterConfigFileByKey("/Users/linkedmemuller/Documents/gitlab/HdfsCompressionpro/src/main/resources/config.properties","hdfsAddr")
+    logger.info ("welcome paor")
+    println(fs)
+  }
   /** *
     * jar包外 的配置文件 读取
     *

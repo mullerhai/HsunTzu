@@ -38,7 +38,9 @@ object  CommonUtils{
   def boolFilePrefixContains(tarEntryName: String,propertiesPath:String): Boolean = {
     var flag:Boolean=false
     val loop: Breaks = new Breaks
-    val proSeq: ArrayBuffer[String] = CompressUtils.converOuterPropertiesToSeq(propertiesPath)(",")
+    val prefix:String="files"
+    val delimiter:String=","
+    val proSeq: ArrayBuffer[String] = CompressUtils.converOuterPropertiesToSeq(propertiesPath,prefix)(delimiter)
     loop.breakable {
       proSeq.foreach(fliePrefix => {
         val suffixContain = tarEntryName.contains(fliePrefix)
