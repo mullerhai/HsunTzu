@@ -42,21 +42,22 @@
 
 ## CompressType.  use. number instead of. compress method invoke 
  
-   ###  case "1" => exec.originFileToCompressFile
+ 
    ###  case "2" => exec.tarFileToOriginFile
    ###  case "3" => exec.compressFileToOriginFile
    ###  case "4" => exec.oneCompressConvertOtherCompress
+   ###  case "1"  => exec.originFileToCompressFile
 
 
 
 ## compress codec  use num instead of. codec class  ,example. use. 1 instead of snappycodec 
   ###  case "0" => deflateCode
-  ###  case "1" => snappyCode
-  ###  case "2" => gzipCode
-  ###  case "3" => lz4Code
-  ###  case "4" => bZip2Code
-  ###  case "5" => defaultCode
-  ###  case _ =>  deflateCode
+  ###  case "1" => snappyCodec
+  ###  case "2" => gzipCodec
+  ###  case "3" => lz4Codec
+  ###  case "4" => bZip2Codec
+  ###  case "5" => defaultCodec
+  ###  case _ =>  deflateCodec
     
 ##  PropertiesFilePath
 
