@@ -1,13 +1,14 @@
-package com.HsunTzu.hdfs
+package com.HsunTzu.utils
 
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.io.compress._
 
-class HdfsCodec {
+class CodecUtils {
 
 }
+object  CodecUtils{
 
-object HdfsCodec{
+
 
   /**
     * 压缩格式 数字信号 到压缩格式 的映射

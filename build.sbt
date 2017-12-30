@@ -15,6 +15,15 @@ libraryDependencies ++= Seq(
   //"org.kamranzafar" % "jtar" % "2.3"
 )
 
+// json parser tools
+val circeVersion = "0.8.0"
+
+libraryDependencies ++= Seq(
+  "io.circe" %% "circe-core",
+  "io.circe" %% "circe-generic",
+  "io.circe" %% "circe-parser"
+).map(_ % circeVersion)
+
 lazy val loggingSettings = Seq(
   libraryDependencies ++= Seq(
     "com.typesafe.scala-logging" %% "scala-logging"   % "3.7.2",
@@ -39,6 +48,7 @@ lazy val testSettings = Seq(
 )
 resolvers += Resolver.sonatypeRepo("snapshots")
 libraryDependencies += "org.platanios" %% "tensorflow" % "0.1.0-SNAPSHOT"
+
 mainClass := Some("com.HsunTzu.exec.execCompress")
 unmanagedResourceDirectories in Compile += baseDirectory.value /"src/main/resources"
 resourceDirectory in Compile := baseDirectory.value / "src/webapp"
