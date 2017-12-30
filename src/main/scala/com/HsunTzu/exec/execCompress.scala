@@ -18,11 +18,18 @@ object  execCompress {
 
   private [this] val logger =Logger(LoggerFactory.getLogger(classOf[execCompress]))
 
-  def  fillHdfsConfig():(String,String,String,String)={
+  def  fillHdfsINNConfig():(String,String,String,String)={
     val FS =PropertiesUtils.configFileByKeyGetValueFrom("hdfsAddr")
     val FSKey =PropertiesUtils.configFileByKeyGetValueFrom("FsKey")
     val FSUser = PropertiesUtils.configFileByKeyGetValueFrom("FsUserKey")
     val hadoopUser =PropertiesUtils.configFileByKeyGetValueFrom("hadoopUser")
+    return (FSKey,FS,FSUser,hadoopUser)
+  }
+  def  fillHdfsOUTConfig(configPath:String):(String,String,String,String)={
+    val FS =PropertiesUtils.outterConfigFileByKey(configPath,"hdfsAddr")
+    val FSKey =PropertiesUtils.outterConfigFileByKey(configPath,"FsKey")
+    val FSUser = PropertiesUtils.outterConfigFileByKey(configPath,"FsUserKey")
+    val hadoopUser =PropertiesUtils.outterConfigFileByKey(configPath,"hadoopUser")
     return (FSKey,FS,FSUser,hadoopUser)
   }
   /**
@@ -32,18 +39,22 @@ object  execCompress {
     */
   def main(args: Array[String]): Unit = {
 
-    val config=fillHdfsConfig()
-    val conf: Configuration = new Configuration()
-    conf.set(config._1,config._2)
-    conf.set(config._3,config._4)
-    System.setProperty(config._3,config._4)
-    val fs = FileSystem.get(conf)
     val inputPath: String = args(0)
     val outdir: String = args(1)
     val compressType: String = args(2)
     val propertiesPath:String = args(3)
     val inputCodecSignal: String = args(4)
     val outputCodecSignal: String = args(5)
+    val innerconfig=fillHdfsINNConfig()
+    val outterconfig=fillHdfsOUTConfig(propertiesPath)
+    val HDFSADDR="hdfsAddr"
+    val FS = PropertiesUtils.outterConfigFileByKey(propertiesPath,HDFSADDR)
+    val config = if (FS =="null" ) innerconfig else outterconfig
+    val conf: Configuration = new Configuration()
+    conf.set(config._1,config._2)
+    conf.set(config._3,config._4)
+    System.setProperty(config._3,config._4)
+    val fs = FileSystem.get(conf)
     val exec = new execCompress
     val programStart = System.currentTimeMillis()
     compressType match {
