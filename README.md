@@ -1,6 +1,6 @@
 ## HsunTzu
 
-### version  Beat 1.0
+### version  Beat 2.0
 
 
 ## Very Fast  Hdfs  Origin File  To  Compress  Decompress Untar Tarball 
