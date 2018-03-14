@@ -52,7 +52,7 @@
 
 
 
-## compress codec  use num instead of. codec class  ,example. use. 1 instead of snappycodec 
+## compress codec  use number instead of. codec class  ,example. use. 1 instead of snappycodec 
   ###  case "0" => deflateCode
   ###  case "1" => snappyCodec
   ###  case "2" => gzipCodec
