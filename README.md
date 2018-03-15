@@ -16,6 +16,12 @@
 
 ###  Good tools are prerequisite to the successful execution of a job
 
+##  how to use it !!!
+###  shell command model & argument  like below content:
+### HadoopExecPath  jar  HsunTzuPro-beat-2.0.jar  InputDir OutputDir  OperateType  ConfigFilePath  InputCodec  OutputCodec
+
+
+
 # First 
 ##  You  need   install  jdk 8   scala 2.12.1 +  sbt 1.0.4 +  hadoop 2.8.1 +  ,
 ##  also   you can edit the version  on build.sbt and ./project/build.properties
@@ -77,7 +83,8 @@
 #### files=biz,ad_status,ad_behavior
 
 ### argument you need to. declard six ,maybe. the last argument is not can use. 
-## rum example. 
+## run example. 
+
 ###  hadoop jar   HsunTzuPro-beat-2.0.jar    /facishare-data/taru/20170820   /facishare-data/gao  1  /usr/local/info.properties 1  0
 
 ### this. is just for  originFile.to  CompressFile, and. compress file use. snappyCodec. 
