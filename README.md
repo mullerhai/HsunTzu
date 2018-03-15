@@ -12,6 +12,15 @@
 
 #### 这个工具主要是 应用在HDFS上 做文件及日志的压缩归档 和逆操作 解压 等，支持 多目录同时 并行 压缩，支持HDFS 现有的六种压缩格式，经测试 在PB级数据上完全没有问题，该压缩工具使用不会占用  MapReduce Job队列，友好支持在  shell repl 中运行，也支持 集成到独立的项目中，使用前请确认 贵司 的HDFS集群环境，需要配置一下集群的地址 等等信息 ，在运行命令时，也需要指定必要的参数，比如  要压缩的文件路径 操作后的输出路径，压缩类型  配置文件路径 输入的压缩格式 输出的压缩格式，项目还在不断添加新的功能中，欢迎大家踊跃尝试，解决 HDFS上的文件归档痛点，释放 HDFS更大的空间。现在支持四种完美的类型，1.原始文件被压2.原始文件打包 ，3，tar包文件 解压为原始文件 4，批量目录文件的压缩或打包,不建议在mac 和Windows系统尝试，建议使用 centos 服务系统
 
+#### 优势
+
+#### 快：  支持并行 |不占MapReduce 任务队列  稳 ：不会中途宕机终止 | 性能占用 平稳    准 ： 确保数据的完整性  |不丢失 不重复  不损坏  多 ： 支持 HDFS 现存的六种压缩格式 和 直接在 HDFS 打包 不经 本地系统   可配置  可复用  可集成 
+
+###  大数据治理 思想
+
+####  普通人 比较关注 这个工具的 压缩率到底是多少 ，我可以简单回答一下 snappy 大概是3-5 倍   gzip default defalte 大概是 6 -12倍  bzip 大概是 4-7倍  lz4 大概是 4-5倍， 然鹅儿， 这并不全面 ，具体的压缩比率和 你的文件内容也有非常大的关系，单独谈压缩率都是耍流氓。 我们 不该只谈论某一种性能的优势，我们在处理大数据的时候，要考虑很多实际问题，比如  集群容量规划 ，压缩解压打包 过程 对集群性能的占用和损耗  未来归档数据 被计算是否支持split ，压缩时间消耗， 未来的跨集群调度数据  集群扩容 数据 Rebalance 等等，很多时候这是一个相互妥协的过程 ，需要权衡 需要谨慎定夺 考虑 到底该如何选择
+
+
 ![avatar](https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1514649799522&di=447db98a2ec75e64828d4f09540924c3&imgtype=0&src=http%3A%2F%2Fimgtu.lishiquwen.com%2F20160924%2F9d3c1aa228ede64a7d615b17b64d73f0.jpg)
 
 ###  Good tools are prerequisite to the successful execution of a job
@@ -19,7 +28,7 @@
 #   How To Use It   ! ! ! 
 ##  Shell Command model & argument  like below content: [MAYBE YOU NEED  EDIT CONFIGFILE FIRST]
 ### HadoopExecPath    jar     HsunTzuPro-beat-2.0.jar    InputDir OutputDir     OperateType     ConfigFilePath     InputCodec    OutputCodec
-
+### hadoop执行脚本  jar   HsunTzuPro-beat-2.0.jar  待压缩/打包/解压的输入文件目录   解压/解包/压缩的输出文件目录  操作类型  配置文件路径  输入的压缩格式  输出的压缩格式
 
 
 # First 
