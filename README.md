@@ -16,9 +16,9 @@
 
 ###  Good tools are prerequisite to the successful execution of a job
 
-##  how to use it !!!
-###  shell command model & argument  like below content:
-### HadoopExecPath  jar  HsunTzuPro-beat-2.0.jar  InputDir OutputDir  OperateType  ConfigFilePath  InputCodec  OutputCodec
+#   How To Use It   ! ! ! 
+##  Shell Command model & argument  like below content: [MAYBE YOU NEED  EDIT CONFIGFILE FIRST]
+### HadoopExecPath    jar     HsunTzuPro-beat-2.0.jar    InputDir OutputDir     OperateType     ConfigFilePath     InputCodec    OutputCodec
 
 
 
