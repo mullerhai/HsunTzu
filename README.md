@@ -1,7 +1,7 @@
 HsunTzu
 =======
 
-[![MIT](https://img.shields.io/github/license/nebula-plugins/nebula-project-plugin.svg)](http://www.apache.org/licenses/LICENSE-2.0)
+[![Apache 2.0](https://img.shields.io/github/license/nebula-plugins/nebula-project-plugin.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 [![Build Status](https://travis-ci.org/jtablesaw/tablesaw.svg?branch=master)](https://travis-ci.org/jtablesaw/tablesaw)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5029f48d00c24f1ea378b090210cf7da)](https://www.codacy.com/app/jtablesaw/tablesaw?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=jtablesaw/tablesaw&amp;utm_campaign=Badge_Grade)
 
@@ -13,7 +13,7 @@ HsunTzu
 
 ## Very Fast  Hdfs  Origin File  To  Compress  Decompress Untar Tarball 
 
-##  LISENCE.  MIT
+##  LISENCE.  Apache 2.0
 
 
 ###  工欲善其事必先利其器  --荀子 HSUNTZU
