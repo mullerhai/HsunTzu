@@ -13,6 +13,7 @@ HsunTzu
 
 ## Very Fast  Hdfs  Origin File  To  Compress  Decompress Untar Tarball 
 
+![avatar](https://github.com/mullerhai/sshjumphive/blob/master/hsuntzu.jpg)
 ##  LISENCE.  Apache 2.0
 
 
